@@ -18,6 +18,7 @@
 <body>
   <h1>Alarm Clock</h1>
   <p>Alarm set for 7:00 AM</p>
+  <button id="start-btn">Enable Alarm</button>
   <button id="snooze-btn" style="display:none;">Snooze</button>
 
   <div id="math-section">
@@ -30,7 +31,7 @@
   <audio id="snooze-sound" src="alarm2.mp3" loop></audio>
 
   <script>
-    var alarmTime = "11:43"; // Set your alarm time here (24-hour format)
+    var alarmTime = "12:00"; // Set your alarm time here (24-hour format)
     var alarmTriggered = false;
     var alarmSound = document.getElementById("alarm-sound");
     var snoozeSound = document.getElementById("snooze-sound");
@@ -43,6 +44,21 @@
     var snoozeTimeout = null;
     var correctAnswer = null;
 
+    var startBtn = document.getElementById("start-btn");
+
+    startBtn.onclick = function () {
+      // Preload and "unlock" audio
+      alarmSound.play();
+      alarmSound.pause();
+      alarmSound.currentTime = 0;
+    
+      snoozeSound.play();
+      snoozeSound.pause();
+      snoozeSound.currentTime = 0;
+    
+      startBtn.style.display = "none";
+    };
+    
     function checkTime() {
       var now = new Date();
       var hours = now.getHours();
