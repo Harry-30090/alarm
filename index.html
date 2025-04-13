@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>ES5 Alarm Clock</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      text-align: center;
+    }
+    #math-section {
+      margin-top: 20px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>Alarm Clock</h1>
+  <p>Alarm set for 7:00 AM</p>
+  <button id="snooze-btn" style="display:none;">Snooze</button>
+
+  <div id="math-section">
+    <p id="math-question"></p>
+    <input type="number" id="math-answer" />
+    <button id="submit-answer">Submit Answer</button>
+  </div>
+
+  <audio id="alarm-sound" src="alarm.mp3" loop></audio>
+  <audio id="snooze-sound" src="alarm2.mp3" loop></audio>
+
+  <script>
+    var alarmTime = "09:32"; // Set your alarm time here (24-hour format)
+    var alarmTriggered = false;
+    var alarmSound = document.getElementById("alarm-sound");
+    var snoozeSound = document.getElementById("snooze-sound");
+    var snoozeBtn = document.getElementById("snooze-btn");
+    var mathSection = document.getElementById("math-section");
+    var mathQuestion = document.getElementById("math-question");
+    var mathAnswer = document.getElementById("math-answer");
+    var submitAnswer = document.getElementById("submit-answer");
+
+    var snoozeTimeout = null;
+    var correctAnswer = null;
+
+    function checkTime() {
+      var now = new Date();
+      var hours = now.getHours();
+      var minutes = now.getMinutes();
+      var formattedTime = (hours < 10 ? "0" + hours : hours) + ":" + 
+                          (minutes < 10 ? "0" + minutes : minutes);
+
+      if (formattedTime === alarmTime && !alarmTriggered) {
+    startAlarm();
+    alarmTriggered = true;
+      }
+    }
+
+    function startAlarm() {
+      console.log("startAlarm() called");
+      alarmSound.play();
+      snoozeBtn.style.display = "inline-block";
+    }
+
+    function generateMathProblem() {
+      var a = Math.floor(Math.random() * 90) + 10; // gives 10–99
+      var b = Math.floor(Math.random() * 90) + 10; // gives 10–99
+      correctAnswer = a * b;
+      mathQuestion.textContent = "What is " + a + " x " + b + "?";
+    }
+
+    snoozeBtn.onclick = function () {
+      alarmSound.pause();
+      alarmSound.currentTime = 0;
+
+      snoozeSound.play();
+      generateMathProblem();
+
+      mathSection.style.display = "block";
+      snoozeBtn.style.display = "none";
+
+      snoozeTimeout = setTimeout(function () {
+        snoozeSound.pause();
+        snoozeSound.currentTime = 0;
+        mathSection.style.display = "none";
+        startAlarm();
+      }, 3 * 60 * 1000);
+    };
+
+    submitAnswer.onclick = function () {
+      var userAnswer = parseInt(mathAnswer.value, 10);
+      if (userAnswer === correctAnswer) {
+        alarmSound.pause();
+        snoozeSound.pause();
+        alarmSound.currentTime = 0;
+        snoozeSound.currentTime = 0;
+        alarmTriggered = true;
+        clearTimeout(snoozeTimeout);
+        mathSection.style.display = "none";
+        alert("Correct! Alarm dismissed.");
+      } else {
+        alert("Incorrect answer. Try again.");
+      }
+    };
+
+    // Check every 10 seconds
+    setInterval(checkTime, 10000);
+  </script>
+</body>
+</html>
