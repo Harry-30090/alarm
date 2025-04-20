@@ -79,12 +79,11 @@
     }
 
     function generateMathProblem() {
-      var a = Math.floor(Math.random() * 90) + 10; // gives 10–99
-      var b = Math.floor(Math.random() * 90) + 10; // gives 10–99
-      correctAnswer = a * b;
-      mathQuestion.textContent = "What is " + a + " x " + b + "?";
+  var base = Math.floor(Math.random() * 8) + 2;     // gives 2–9
+  var exponent = Math.floor(Math.random() * 5) + 3; // gives 3–7
+  correctAnswer = Math.pow(base, exponent);
+  mathQuestion.textContent = "What is " + base + " ^ " + exponent + "?";
     }
-
     snoozeBtn.onclick = function () {
       alarmSound.pause();
       alarmSound.currentTime = 0;
